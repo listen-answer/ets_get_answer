@@ -93,7 +93,8 @@ def generate_machine_code():
     # 获取MAC地址
     mac_address = get_mac_address()
     # print(mac_address)
-    
+    print(mac_address)
+    print(data)    
     # 计算数据的MD5
     data_md5 = calculate_md5(data)
     
