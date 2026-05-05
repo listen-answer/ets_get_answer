@@ -183,6 +183,8 @@ class ETSClient:
         Returns:
             绑定是否成功
         """
+        # 在login判断之后，应该调用/user/info接口，获取用户信息，这里简写了，没太大必要
+
         try:
             body_data = [{
                 "r": "user/rebind-code",
