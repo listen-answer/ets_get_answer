@@ -9,7 +9,7 @@ import getpass
 import shutil
 import logging
 from typing import Dict, List, Tuple, Optional, Any, Union
-import hwid
+import random_hwid
 import win32con
 import win32api
 
@@ -137,7 +137,7 @@ class ETSClient:
                     "sn": sn,
                     "phone": phone,
                     "password": password,
-                    "device_code":hwid.generate_machine_code(),
+                    "device_code":random_hwid.generate_machine_code(),
                     "device_name": os.environ['COMPUTERNAME'],
                     "version": version,
                     "local_ip": "127.0.0.1",
