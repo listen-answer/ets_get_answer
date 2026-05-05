@@ -146,15 +146,70 @@ class ETSClient:
                     "sign_response": sign_response,
                 }
             }]
+            # sn以及一些其他信息不应该硬编码，推荐更改
             
             response = self.send_request(f"{API_BASE_URL}/user/login", body_data)
-            self.token = response[0]["body"]["token"]
+            if response[0]["code"] == 0:
+                self.token = response[0]["body"]["token"]
+            elif response[0]["code"] == 30014:
+                self.bind_device(phone = phone, password = password, device_name = os.environ['COMPUTERNAME'])
+            else:
+                raise ValueError(f"登录失败，服务器返回错误码: {response[0]['code']}")
             logger.info("登录成功")
             return True
         except Exception as e:
             logger.error(f"登录失败: {e}")
             return False
     
+    def bind_device(self, phone: str, password: str, system: str = "4", sign_response: int = 1, 
+                    email: str = "", code: str = "0", version: str = "2", device_name: str = "1337", 
+                    local_ip: str = "127.0.0.1", global_client_version: str = "", sn: str = "test") -> bool:
+        """
+        绑定设备到账户
+
+        Args:
+            phone: 手机号
+            password: 密码
+            system: 系统版本
+            sign_response: 签名响应
+            version: 客户端版本
+            global_client_version: 全局客户端版本
+            sn: 序列号
+            device_name: 设备名称
+            local_ip: 本地IP
+            email: 邮箱
+            code: 验证码
+        
+        Returns:
+            绑定是否成功
+        """
+        try:
+            body_data = [{
+                "r": "user/rebind-code",
+                "params": {
+                    "sn": sn,
+                    "phone": phone,
+                    "email": email,
+                    "password": password,
+                    "code": code,
+                    "version": version,
+                    "device_name": device_name,
+                    "device_code": hwid.generate_machine_code(),
+                    "local_ip": local_ip,
+                    "system": system,
+                    "global_client_version": global_client_version,
+                    "sign_response": sign_response
+                }
+            }]
+
+            response = self.send_request(f"{API_BASE_URL}/user/rebind-code", body_data)
+            self.token = response[0]["body"]["token"]
+            logger.info("设备绑定成功")
+            return True
+        except Exception as e:
+            logger.error(f"设备绑定失败: {e}")
+            return False
+
     def get_parent_account_id(self, system: str = "4", sign_response: int = 1, 
                              version: str = "2", global_client_version: str = "", sn: str = "test") -> Optional[str]:
         """
