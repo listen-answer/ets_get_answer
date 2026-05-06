@@ -137,7 +137,11 @@ class ETSClient:
                     "sn": sn,
                     "phone": phone,
                     "password": password,
+<<<<<<< HEAD
                     "device_code":random_hwid.generate_machine_code(),
+=======
+                    "device_code": random_hwid.generate_machine_code(),
+>>>>>>> 92dcb72eb908c1fd19c84822ea195c0df532de83
                     "device_name": os.environ['COMPUTERNAME'],
                     "version": version,
                     "local_ip": "127.0.0.1",
